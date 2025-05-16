@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8.0",
+  "package": "net.juyoh.scale.mixin",
+  "mixins": [
+    "PistonPullMixin"
+  ],
+  "client": [
+    "ItemRendererMixin"
+  ]
+}

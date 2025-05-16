@@ -1,0 +1,9 @@
+{
+  "type": "upsizing:stretching",
+  "ingredient": {
+    "tag": "upsizing:froglights"
+  },
+  "result": {
+    "id": "upsizing:orb_of_scale"
+  }
+}

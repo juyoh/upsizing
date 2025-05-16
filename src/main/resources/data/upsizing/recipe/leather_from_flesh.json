@@ -1,0 +1,9 @@
+{
+  "type": "upsizing:stretching",
+  "ingredient": {
+    "item": "minecraft:rotten_flesh"
+  },
+  "result": {
+    "id": "minecraft:leather"
+  }
+}

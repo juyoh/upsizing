@@ -1,0 +1,12 @@
+{
+  "itemGroup.upsizing": "Upsizing",
+  "item.upsizing.resizer": "Resizer",
+  "item.upsizing.orb_of_scale": "Orb of Scale",
+
+  "message.upsizing.nopermission": "You do not have permission to use this!",
+  "message.upsizing.scale": "Scale amount",
+  "message.upsizing.resizer.tooltip.shift": "A _device_ to let you change your _scale_.",
+  "message.upsizing.resizer.orb_of_scale.shift": "A mysterious, _growing_, _orb_.",
+
+  "misc.upsizing.stretching": "Stretching"
+}

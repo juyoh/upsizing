@@ -13,6 +13,7 @@ Crafted with the new **Orb Of Scale**, this handheld redstone device is capable 
 - The "Scale Amount" box is how much you will grow or shrink when you use the **Resizer**
 - The "Current Scale" icon shows your current player scale multiplier
 - Press the check button to exit
+- Fill up your **Backtank** with pressure first
 - **When in game, right click while either looking up or down to grow or shrink!**
 
 ## **Stretching**

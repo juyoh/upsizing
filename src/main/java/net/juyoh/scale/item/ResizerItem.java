@@ -26,6 +26,7 @@ import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
 
@@ -121,7 +122,7 @@ public class ResizerItem extends Item {
     }
 
     @Override
-    public Component getDescription() {
+    public @NotNull Component getDescription() {
         List<Component> lines = TooltipHelper.cutStringTextComponent(Component.translatable("create.tooltip.holdForDescription").toString(),
                 Upsizing.greyPalette.primary(), Upsizing.greyPalette.highlight(), 1);
         if (Screen.hasShiftDown()) {

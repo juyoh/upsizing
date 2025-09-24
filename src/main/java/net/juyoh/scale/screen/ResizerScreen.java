@@ -39,8 +39,6 @@ public class ResizerScreen extends Screen {
 
     float resizeAmount;
 
-
-
     public ResizerScreen(ResizerItem item, InteractionHand usedHand) {
         super(Component.literal("Resizer"));
         this.item = item;

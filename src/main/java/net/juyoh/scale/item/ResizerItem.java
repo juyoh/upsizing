@@ -63,7 +63,7 @@ public class ResizerItem extends Item {
         }
         //If we need operator and don't have it
         if (Config.operatorRequired && !player.hasPermissions(player.getServer().getOperatorUserPermissionLevel())) {
-            player.displayClientMessage(Component.translatable("message.upsizer.nopermission").withStyle(ChatFormatting.RED), true);
+            player.displayClientMessage(Component.translatable("message.upsizing.nopermission").withStyle(ChatFormatting.RED), true);
 
             return InteractionResultHolder.fail(stack);
         }
@@ -74,20 +74,22 @@ public class ResizerItem extends Item {
             
             float currentScale = data.getTargetScale();
 
-            if (currentScale + changeAmount < 512 && currentScale + changeAmount > 0) {
-                BacktankUtil.consumeAir(player, stack, ((int) Math.ceil(Math.abs(changeAmount))));
-                
-                data.setTargetScale(currentScale + changeAmount);
+            if (currentScale + changeAmount < 512) {
+                if (currentScale + changeAmount > 0) {
+                    BacktankUtil.consumeAir(player, stack, ((int) Math.ceil(Math.abs(changeAmount))));
 
-                //if ((level.getServer().getTickCount() - lastUseTime) > 16) {
-                    level.playLocalSound(player, changeAmount > 0 ? SoundEvents.BEACON_ACTIVATE : SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 0.6f, 1f);
-                //}
+                    data.setTargetScale(currentScale + changeAmount);
 
-
-                lastUseTime = level.getServer().getTickCount();
-
+                    lastUseTime = level.getServer().getTickCount();
+                } else {
+                    player.displayClientMessage(Component.translatable("message.upsizing.toosmall").withStyle(ChatFormatting.RED), true);
+                }
                 return InteractionResultHolder.success(stack);
+            } else {
+                player.displayClientMessage(Component.translatable("message.upsizing.toobig").withStyle(ChatFormatting.RED), true);
             }
+        } else {
+            player.displayClientMessage(Component.translatable("message.upsizing.nopressure").withStyle(ChatFormatting.RED), true);
         }
         return InteractionResultHolder.pass(stack);
     }

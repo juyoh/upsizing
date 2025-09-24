@@ -67,63 +67,35 @@ public class PistonPullMixin {
 
             Block blockPulled = level.getBlockState(pullPos).getBlock();
 
-            if (blockPulled == AllBlocks.BELT.get() && state.getValue(BlockStateProperties.FACING) == Direction.DOWN) {
-                BeltBlockEntity belt = BeltHelper.getSegmentBE(level, pullPos);
-                BeltBlockEntity controller = belt.getControllerBE();
+            if (blockPulled == AllBlocks.DEPOT.get() && state.getValue(BlockStateProperties.FACING) == Direction.DOWN) {
+                   DepotBlockEntity depot = (DepotBlockEntity) level.getBlockEntity(pullPos);
 
-                controller.getInventory().applyToEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
-                    Upsizing.LOGGER.info("index: {}", belt.index);
-                    ItemStack input = transportedItemStack.stack;
-                    Upsizing.LOGGER.info("input: {}", input.toString());
-
-                    Upsizing.LOGGER.info("belt pos: {}", transportedItemStack.beltPosition);
-
-                    Optional<RecipeHolder<StretchingRecipe>> recipeHolder = level.getServer().getRecipeManager().getRecipeFor(
-                            ModRecipes.STRETCHING_TYPE.get(), new StretchingRecipeInput(input), level);
-                    if (recipeHolder.isPresent() && Math.abs(transportedItemStack.beltPosition % 1) < 0.7f) {
-                        ItemStack out = recipeHolder.get().value().output();
-                        out.setCount(input.getCount());
-                        Upsizing.LOGGER.info("output: {}", out.toString());
-                        level.playSound(null, pullPos, SoundEvents.SLIME_JUMP_SMALL, SoundSource.MASTER, 1f, 1f);
-                        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pullPos, null);
-                        handler.insertItem(0, out, false);
-                        belt.notifyUpdate();
-                        return TransportedItemStackHandlerBehaviour.TransportedResult.removeItem();
-                    }
-
-                    return TransportedItemStackHandlerBehaviour.TransportedResult.doNothing();
-                });
+                   ItemStack input = depot.getHeldItem();
+                   Upsizing.LOGGER.info("input: {}", input.toString());
+                   Optional<RecipeHolder<StretchingRecipe>> recipeHolder = level.getServer().getRecipeManager().getRecipeFor(
+                           ModRecipes.STRETCHING_TYPE.get(), new StretchingRecipeInput(input), level);
+                   if (recipeHolder.isPresent()) {
+                       ItemStack out = recipeHolder.get().value().output();
+                       out.setCount(input.getCount());
+                       Upsizing.LOGGER.info("output: {}", out.toString());
+                       level.playSound(null, pullPos, SoundEvents.SLIME_JUMP_SMALL, SoundSource.MASTER, 1f, 1f);
+                       depot.setHeldItem(recipeHolder.get().value().output());
+                       depot.notifyUpdate();
+                   }
 
 
-            } else if (blockPulled == AllBlocks.DEPOT.get() && state.getValue(BlockStateProperties.FACING) == Direction.DOWN) {
-                DepotBlockEntity depot = (DepotBlockEntity) level.getBlockEntity(pullPos);
+               }
 
-                ItemStack input = depot.getHeldItem();
-                Upsizing.LOGGER.info("input: {}", input.toString());
-                Optional<RecipeHolder<StretchingRecipe>> recipeHolder = level.getServer().getRecipeManager().getRecipeFor(
-                        ModRecipes.STRETCHING_TYPE.get(), new StretchingRecipeInput(input), level);
-                if (recipeHolder.isPresent()) {
-                    ItemStack out = recipeHolder.get().value().output();
-                    out.setCount(input.getCount());
-                    Upsizing.LOGGER.info("output: {}", out.toString());
-                    level.playSound(null, pullPos, SoundEvents.SLIME_JUMP_SMALL, SoundSource.MASTER, 1f, 1f);
-                    depot.setHeldItem(recipeHolder.get().value().output());
-                    depot.notifyUpdate();
-                }
+               List<ItemEntity> items = level.getEntities(EntityTypeTest.forClass(ItemEntity.class),
+                       AABB.encapsulatingFullBlocks(pullPos, pullPos), (itemEntity -> true));
 
+               for (ItemEntity item : items) {
+                   Optional<RecipeHolder<StretchingRecipe>> recipeHolder = level.getServer().getRecipeManager().getRecipeFor(
+                           ModRecipes.STRETCHING_TYPE.get(), new StretchingRecipeInput(item.getItem()), level);
 
-            }
-
-            List<ItemEntity> items = level.getEntities(EntityTypeTest.forClass(ItemEntity.class),
-                    AABB.encapsulatingFullBlocks(pullPos, pullPos), (itemEntity -> true));
-
-            for (ItemEntity item : items) {
-                Optional<RecipeHolder<StretchingRecipe>> recipeHolder = level.getServer().getRecipeManager().getRecipeFor(
-                        ModRecipes.STRETCHING_TYPE.get(), new StretchingRecipeInput(item.getItem()), level);
-
-                recipeHolder.ifPresent(stretchingRecipeRecipeHolder ->
-                        Upsizing.stretchItem(item, stretchingRecipeRecipeHolder.value().output().getItem()));
-            }
+                   recipeHolder.ifPresent(stretchingRecipeRecipeHolder ->
+                           Upsizing.stretchItem(item, stretchingRecipeRecipeHolder.value().output().getItem()));
+               }
         }
     }
 
